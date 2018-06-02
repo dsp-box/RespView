@@ -1,10 +1,10 @@
 #! /usr/bin/python3
 
+# application: SCREEN
 # author: Krzysztof Czarnecki
 # email: czarnecki.krzysiek@gmail.com
-# application: SCREEN
-# brief: 
-# opensource licence: GPL-3.0
+# brief: displays for signal presentation
+# opensource licence: LGPL-2.1
 
 
 import gi
