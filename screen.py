@@ -28,30 +28,19 @@ class Screen(Gtk.Window):
         if self.width <= 0:
             raise ValueError("width")
         
-        fix = Gtk.Fixed()
-        self.add(fix)
+        self.fix = Gtk.Fixed()
+        self.add(self.fix)
         
-        ebox = Gtk.EventBox()
-        ebox.connect ('button-press-event',
-                      self.on_clicked_mouse)
-        fix.put(ebox, 0,0)
-        
-        self.img = Gtk.Image()
-        ebox.add(self.img)
-        self.show_all()
-
-    def screen_refresh(self, screen):
-        tmp = GLib.Bytes.new(screen)
+    def refresh(self, data, width, height, img):
+        tmp = GLib.Bytes.new(data)
         rgbf = Gpb.Colorspace.RGB
+        w3 = 3 * width
         
-        w = self.width 
-        h = self.height
-        w3 = 3 * self.width
-        args = tmp, rgbf, False, 8, w, h, w3
-        
+        args = tmp, rgbf, False, 8, width, height, w3        
         pbuf = Gpb.Pixbuf.new_from_bytes(*args)
-        self.img.set_from_pixbuf(pbuf)
-
+        img.set_from_pixbuf(pbuf)
+        return img
+    
     def on_clicked_mouse (self, box, event):        
         x, y = int(event.x), int(event.y)
         print("XY: {} {}".format(x, y))
