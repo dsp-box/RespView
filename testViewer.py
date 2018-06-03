@@ -36,7 +36,7 @@ class TestScreen(RespViewer):
         gen = range(3 * self.width * self.height)
         data = [randint(0, 255) for index in gen]
         args = data, self.width, self.height, self.img
-        self.img = self.draw(*args)
+        self.img = super(TestScreen, self).refresh(*args)
         
         while Gtk.events_pending():
             Gtk.main_iteration()

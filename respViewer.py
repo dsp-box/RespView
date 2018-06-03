@@ -31,16 +31,20 @@ class RespViewer(Gtk.Window):
         
         self.fix = Gtk.Fixed()
         self.add(self.fix)
-        
-    def draw(self, data, width, height, img):
+
+    def refresh(self, data, width, height, img):
+        pbuf = self.draw(data, width, height)
+        img.set_from_pixbuf(pbuf)
+        return img
+    
+    def draw(self, data, width, height):
         tmp = GLib.Bytes.new(data)
         rgbf = Gpb.Colorspace.RGB
         w3 = 3 * width
         
-        args = tmp, rgbf, False, 8, width, height, w3        
+        args = tmp, rgbf, False, 8, width, height, w3
         pbuf = Gpb.Pixbuf.new_from_bytes(*args)
-        img.set_from_pixbuf(pbuf)
-        return img
+        return pbuf
     
     def on_clicked_mouse (self, box, event):        
         x, y = int(event.x), int(event.y)

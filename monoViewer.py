@@ -11,11 +11,11 @@ gi.require_version('Gtk', '3.0')
 from gi.repository import GObject
 from gi.repository import Gtk
 
-from respTools import ExtOrderedDict
 from respViewer import RespViewer
-from respTools import RespSource
+from respSource import RespSource
 
-from random import randint
+from respTools import ExtOrderedDict
+from respTools import randomRGB
 
 
 class MonoViewer(RespViewer):
@@ -35,13 +35,13 @@ class MonoViewer(RespViewer):
         GObject.timeout_add(1, self.on_timeout)
         self.show_all()
 
-    def move(self, data):
+    def rotate(self, data):
+        key, img = self.images.first_item()        
+        img = self.refresh(data, 1, self.height, img)
+        self.images.pop(key)
+        
         stamp = time.time()
-        k, img = self.images.first_item()        
-
-        img = self.draw(data, 1, self.height, img)
         self.images[stamp] = img
-        self.images.pop(k)
         
         for n, k in enumerate(self.images.keys()):
             self.fix.move(self.images[k], n, 0)
@@ -55,20 +55,18 @@ class MonoViewer(RespViewer):
         white = (255, 255, 255)        
         gray = (100, 100, 100)        
         
-        gener = range(self.height)
         data = []
-        for n in gener:
+        for n in range(self.height):
             rgb = white if n >= nr else gray
             data.extend(rgb)                
         
-        self.move(data)
+        self.rotate(data)
         return True
     
     def init_image(self):
-        gener = range(self.height)
-        rgb = [randint(0, 255) for n in range(3)]        
-        data = [c for index in gener for c in rgb]        
-        img = self.draw(data, 1, self.height, Gtk.Image())
+        rgb = randomRGB()        
+        data = [c for index in range(self.height) for c in rgb]        
+        img = self.refresh(data, 1, self.height, Gtk.Image())
         return img 
 
 
@@ -81,7 +79,7 @@ try:
         source = "/dev/urandom"
         factor = 0.01
         
-    args = 1200, 100, source, factor
+    args = 1200, 200, source, factor
     win = MonoViewer(*args)    
     Gtk.main()
     
