@@ -33,6 +33,15 @@ class MonoViewer(RespViewer):
             self.images[stamp] = self.init_image()
             self.fix.put(self.images[stamp], n, 0)
 
+        ebox = Gtk.EventBox()
+        ebox.connect('button-press-event',
+                     self.on_clicked_mouse)
+        self.fix.put(ebox, 0,0)
+        
+        active = Gtk.Image()
+        active.set_size_request(width, height)
+        ebox.add(active)
+        
         GObject.timeout_add(1, self.on_timeout)
         self.show_all()
 
@@ -75,6 +84,22 @@ class MonoViewer(RespViewer):
 
         return img 
 
+    def on_clicked_mouse (self, box, event):        
+        x, y = int(event.x), int(event.y)
+        t = list(self.images.keys())[x]        
+        tstruct = time.localtime(t)
+        
+        s = tstruct.tm_sec
+        m = tstruct.tm_min
+        h = tstruct.tm_hour
+
+        Y = tstruct.tm_year
+        M = tstruct.tm_mon
+        D = tstruct.tm_mday
+
+        d = "{}-{}-{}".format(D, M, Y)
+        t = "{}:{}:{}".format(h, m, s)
+        print("XY: {} {}, time {}, date {}".format(x, y, t, d))
 
 try:
     try:
