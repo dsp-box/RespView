@@ -19,6 +19,7 @@ from gi.repository import GdkPixbuf as Gpb
 class Screen(Gtk.Window):
     def __init__(self, title, width, height):
         super(Screen, self).__init__(title=title)
+        self.connect("delete-event", Gtk.main_quit)
 
         self.height = int(height)
         if self.height <= 0:
@@ -31,7 +32,7 @@ class Screen(Gtk.Window):
         self.fix = Gtk.Fixed()
         self.add(self.fix)
         
-    def refresh(self, data, width, height, img):
+    def draw(self, data, width, height, img):
         tmp = GLib.Bytes.new(data)
         rgbf = Gpb.Colorspace.RGB
         w3 = 3 * width
@@ -44,3 +45,4 @@ class Screen(Gtk.Window):
     def on_clicked_mouse (self, box, event):        
         x, y = int(event.x), int(event.y)
         print("XY: {} {}".format(x, y))
+

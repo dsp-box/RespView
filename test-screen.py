@@ -19,7 +19,6 @@ from random import randint
 class TestScreen(Screen):
     def __init__(self, title, width, height):
         super(TestScreen, self).__init__(title, width, height)
-        self.connect("delete-event", Gtk.main_quit)
 
         self.img = Gtk.Image()        
         GObject.timeout_add(100, self.on_timeout)
@@ -35,7 +34,8 @@ class TestScreen(Screen):
         gen = range(3 * self.width * self.height)
         data = [randint(0, 255) for index in gen]
         args = data, self.width, self.height, self.img
-        super(TestScreen, self).refresh(*args)
+        self.img = self.draw(*args)
+        
         while Gtk.events_pending():
             Gtk.main_iteration()
 
