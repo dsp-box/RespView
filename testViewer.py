@@ -1,9 +1,9 @@
 #! /usr/bin/python3
 
-# application: SCREEN
+# application: RespView
 # author: Krzysztof Czarnecki
 # email: czarnecki.krzysiek@gmail.com
-# brief: displays for signal presentation
+# brief: viewers for respiration signal
 # opensource licence: LGPL-2.1
 
 import gi
@@ -12,13 +12,15 @@ gi.require_version('Gtk', '3.0')
 from gi.repository import GObject
 from gi.repository import Gtk
 
-from screen import Screen
+from respViewer import RespViewer
 from random import randint
 
 
-class TestScreen(Screen):
-    def __init__(self, title, width, height):
-        super(TestScreen, self).__init__(title, width, height)
+class TestScreen(RespViewer):
+    title = "Test Viewer"
+    
+    def __init__(self, width, height):
+        super(TestScreen, self).__init__(self.title, width, height)
 
         self.img = Gtk.Image()        
         GObject.timeout_add(100, self.on_timeout)
@@ -45,7 +47,7 @@ class TestScreen(Screen):
 
 
 try:
-    args = "Test Screen", 400, 100
+    args = 400, 100
     win = TestScreen(*args)              
     Gtk.main()
     print("end..")

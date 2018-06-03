@@ -1,9 +1,9 @@
 #! /usr/bin/python3
 
-# application: SCREEN
+# application: RespView
 # author: Krzysztof Czarnecki
 # email: czarnecki.krzysiek@gmail.com
-# brief: displays for signal presentation
+# brief: viewers for respiration signal
 # opensource licence: LGPL-2.1
 
 from collections import OrderedDict
@@ -14,16 +14,16 @@ class ExtOrderedDict(OrderedDict):
 
 import os
 
-class Source(list):
-    def __init__(self, fname):
+class RespSource(list):
+    def __init__(self, srcpath):
         
-        if not os.path.exists(fname):
+        if not os.path.exists(srcpath):
             raise ValueError("no file")
-        self.fname = str(fname)
+        self.srcpath = str(srcpath)
         self.order = 30
         
     def get_from_system(self):
-        with open(self.fname, 'rb') as f:
+        with open(self.srcpath, 'rb') as f:
             bytesVal = f.read(1)
             
         kwargs = {"byteorder":"big", "signed":True}
@@ -35,7 +35,7 @@ class Source(list):
         return sum(self) / self.order
         
     def get(self):        
-        if self.fname == "/dev/urandom":
+        if self.srcpath == "/dev/urandom":
             return self.get_from_system()
             
         else:

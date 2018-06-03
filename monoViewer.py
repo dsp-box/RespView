@@ -1,9 +1,9 @@
 #! /usr/bin/python3
 
-# application: SCREEN
+# application: RespView
 # author: Krzysztof Czarnecki
 # email: czarnecki.krzysiek@gmail.com
-# brief: displays for signal presentation
+# brief: viewers for respiration signal
 # opensource licence: LGPL-2.1
 
 import gi, sys, time
@@ -11,17 +11,19 @@ gi.require_version('Gtk', '3.0')
 from gi.repository import GObject
 from gi.repository import Gtk
 
-from screen import Screen
+from respTools import ExtOrderedDict
+from respViewer import RespViewer
+from respTools import RespSource
+
 from random import randint
-from tools import ExtOrderedDict
-from tools import Source
+
+
+class MonoViewer(RespViewer):
+    title = "Mono Viewer"
     
-class MonoScreen(Screen):
-    title = "Mono Screen"
-    
-    def __init__(self, width, height, srcname, factor):
-        super(MonoScreen, self).__init__(self.title, width, height)
-        self.source = Source(srcname)
+    def __init__(self, width, height, srcpath, factor):
+        super(MonoViewer, self).__init__(self.title, width, height)
+        self.source = RespSource(srcpath)
         self.factor = float(factor)
         
         self.images = ExtOrderedDict()
@@ -80,7 +82,7 @@ try:
         factor = 0.01
         
     args = 1200, 100, source, factor
-    win = MonoScreen(*args)    
+    win = MonoViewer(*args)    
     Gtk.main()
     
     print("end..")

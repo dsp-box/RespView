@@ -1,9 +1,9 @@
 #! /usr/bin/python3
 
-# application: SCREEN
+# application: RespView
 # author: Krzysztof Czarnecki
 # email: czarnecki.krzysiek@gmail.com
-# brief: displays for signal presentation
+# brief: viewers for respiration signal
 # opensource licence: LGPL-2.1
 
 import gi
@@ -16,9 +16,9 @@ from gi.repository import GLib
 gi.require_version('GdkPixbuf', '2.0')
 from gi.repository import GdkPixbuf as Gpb
 
-class Screen(Gtk.Window):
+class RespViewer(Gtk.Window):
     def __init__(self, title, width, height):
-        super(Screen, self).__init__(title=title)
+        super(RespViewer, self).__init__(title=title)
         self.connect("delete-event", Gtk.main_quit)
 
         self.height = int(height)
