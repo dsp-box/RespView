@@ -9,6 +9,17 @@
 from collections import OrderedDict
 from random import randint
 
+import gi
+
+gi.require_version('GdkPixbuf', '2.0')
+from gi.repository import GdkPixbuf as Gpb
+
+gi.require_version('Gtk', '3.0')
+from gi.repository import Gtk
+
+gi.require_version('GLib', '2.0')
+from gi.repository import GLib
+
 
 class ExtOrderedDict(OrderedDict):
     def first_item(self):
@@ -20,3 +31,13 @@ def randomRGB():
     g = randint(0, 255)
     b = randint(0, 255)
     return r,g,b
+
+
+def drawPixBuf(data, width, height):
+    tmp = GLib.Bytes.new(data)
+    rgbf = Gpb.Colorspace.RGB
+    w3 = 3 * width
+
+    args = tmp, rgbf, False, 8, width, height, w3
+    pbuf = Gpb.Pixbuf.new_from_bytes(*args)
+    return pbuf

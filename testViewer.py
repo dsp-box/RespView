@@ -12,6 +12,7 @@ gi.require_version('Gtk', '3.0')
 from gi.repository import GObject
 from gi.repository import Gtk
 
+from respTools import drawPixBuf
 from respViewer import RespViewer
 from random import randint
 
@@ -35,9 +36,9 @@ class TestScreen(RespViewer):
     def refresh(self):
         gen = range(3 * self.width * self.height)
         data = [randint(0, 255) for index in gen]
-        args = data, self.width, self.height, self.img
-        self.img = super(TestScreen, self).refresh(*args)
-        
+        pbuf = drawPixBuf(data, self.width, self.height)
+        self.img.set_from_pixbuf(pbuf)
+
         while Gtk.events_pending():
             Gtk.main_iteration()
 

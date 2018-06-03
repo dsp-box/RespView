@@ -15,6 +15,7 @@ from respViewer import RespViewer
 from respSource import RespSource
 
 from respTools import ExtOrderedDict
+from respTools import drawPixBuf
 from respTools import randomRGB
 
 
@@ -35,9 +36,10 @@ class MonoViewer(RespViewer):
         GObject.timeout_add(1, self.on_timeout)
         self.show_all()
 
-    def rotate(self, data):
-        key, img = self.images.first_item()        
-        img = self.refresh(data, 1, self.height, img)
+    def refresh(self, data):
+        key, img = self.images.first_item()
+        pbuf = drawPixBuf(data, 1, self.height)
+        img.set_from_pixbuf(pbuf)
         self.images.pop(key)
         
         stamp = time.time()
@@ -60,13 +62,17 @@ class MonoViewer(RespViewer):
             rgb = white if n >= nr else gray
             data.extend(rgb)                
         
-        self.rotate(data)
+        self.refresh(data)
         return True
     
     def init_image(self):
         rgb = randomRGB()        
-        data = [c for index in range(self.height) for c in rgb]        
-        img = self.refresh(data, 1, self.height, Gtk.Image())
+        data = [c for index in range(self.height) for c in rgb]
+
+        img = Gtk.Image()
+        pbuf = drawPixBuf(data, 1, self.height)
+        img.set_from_pixbuf(pbuf)
+
         return img 
 
 
