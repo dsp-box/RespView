@@ -67,8 +67,9 @@ class MonoViewer(RespViewer):
         self.show_all()
 
         self.source = RespSource(srcpath, sensor, column)
-        # self.preproc = RespHammingFilter(180)
-        self.preproc = RespIntegrateFilter(220, False)
+        # self.preproc = RespIntegrateFilter(220, False)
+        # self.preproc = RespIntegrateFilter(300)
+        self.preproc = RespHammingFilter(240)
         
         self.flow = Thread(target=self.source.fill, daemon=True)
         self.flow.start()

@@ -15,8 +15,10 @@ class RespIntegrateFilter(list):
 
         if absFlag:
             self.process = self.process_abs
+            print("abs: on")
         else:
             self.process = self.process_int
+            print("abs: off")
             
     def process_abs(self, sample):
         self.append(sample)
