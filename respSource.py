@@ -3,7 +3,7 @@
 # application: RespView
 # author: Krzysztof Czarnecki
 # email: czarnecki.krzysiek@gmail.com
-# brief: viewers for respiration signal
+# brief: loader for respiration signal
 # opensource licence: LGPL-2.1
 
 import os
@@ -58,6 +58,7 @@ class RespSource(list):
         
     def fill_from_serial(self):
         print("open source...")
+        unicodeError = 0
         with open(self.srcpath, 'rt') as f:
             while True:               
                 try:
@@ -66,7 +67,9 @@ class RespSource(list):
                     vec = str(line).split(",")
                     
                 except UnicodeDecodeError:
-                    print("UnicodeDecodeError: no line")
+                    info = "no line ({})".format(unicodeError)
+                    print("UnicodeDecodeError:", info)
+                    unicodeError += 1
                     continue
                 
                 if len(vec) != 9:
