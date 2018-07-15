@@ -41,15 +41,18 @@ class RespSource(list):
         
         print("open source...")
         with open(self.srcpath, 'rb') as f:
-            for n in range(self.latency):
+            while True:               
                 bytesVal = f.read(1)            
-                stamp = time.time()
-
                 value = int.from_bytes(bytesVal, **kwargs)
                 
                 self.temp += value                
                 self.temp /= self.divider
-                self.append((stamp, self.temp))
+                
+                self.stamp = time.time()
+                self.append((self.stamp, self.temp))
+
+                if  self.counter % 50 == 0:
+                    time.sleep(0.002)
                 
         print("urandom reading end...")
         

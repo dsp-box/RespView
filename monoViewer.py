@@ -89,7 +89,6 @@ class MonoViewer(RespViewer):
         if len(self.inbuf) > self.latency:
             self.refresh()
 
-
         if self.counter % 100 == 0:
             print("rate: {}".format(self.source.get_rate()))
         
@@ -109,6 +108,9 @@ class MonoViewer(RespViewer):
         x, y = int(event.x), int(event.y)
         t = list(self.images.keys())[x]        
         tstruct = time.localtime(t)
+
+        ms = int(round(t * 1000))
+        ms %= 1000
         
         s = tstruct.tm_sec
         m = tstruct.tm_min
@@ -119,26 +121,30 @@ class MonoViewer(RespViewer):
         D = tstruct.tm_mday
 
         d = "{}-{}-{}".format(D, M, Y)
-        t = "{}:{}:{}".format(h, m, s)
-        print("XY: {} {}, time {}, date {}".format(x, y, t, d))
+        T = "{:02d}:{:02d}:{:02d}.{:03d}".format(h, m, s, ms)
+        print("XY: {} {}, time {}, date {}".format(x, y, T, d))
 
 try:
+    cmdargs = {}
     try:
-        source = str(sys.argv[1])
+        cmdargs["srcpath"] = str(sys.argv[1])
         print("source: " + sys.argv[1])
         
-        sensor = int(sys.argv[2])
+        cmdargs["sensor"] = int(sys.argv[2])
         print("sensor: " + sys.argv[2])
         
-        column = int(sys.argv[3])
+        cmdargs["column"] = int(sys.argv[3])
         print("column: " + sys.argv[3])
         
-        factor = float(sys.argv[4])
+        cmdargs["factor"] = float(sys.argv[4])
         print("factor: " + sys.argv[4])
         
     except IndexError:
-        source = "/dev/urandom"
-        factor = 0.01
+        cmdargs["srcpath"] = "/dev/urandom"
+        print("source: /dev/urandom")
+
+        cmdargs["factor"] = 0.01
+        print("factor: 0.01")
         
     GObject.threads_init()
     print("threads init..")
@@ -147,8 +153,8 @@ try:
     height = 600
     latency = 5
     
-    args = width, height, latency, source, sensor, column, factor
-    win = MonoViewer(*args)
+    winargs = width, height, latency
+    win = MonoViewer(*winargs, **cmdargs)
     print("window init..")
     
     Gtk.main()    
